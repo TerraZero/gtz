@@ -1,0 +1,18 @@
+{
+  "name": "gtz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "TerraZero",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^1.8.3"
+  },
+  "dependencies": {
+    "github-api": "^3.0.0",
+    "jquery": "^3.3.1"
+  }
+}
