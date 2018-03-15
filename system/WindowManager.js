@@ -21,7 +21,7 @@ module.exports = class WindowManager {
     const win = new BrowserWindow(config);
 
     win.loadURL(url.format({
-      pathname: path.join(this._manager.getSetting('root'), 'index.html'),
+      pathname: path.join(this._manager.getSetting('root'), 'src/html', 'index.html'),
       protocol: 'file:',
       slashes: true,
     }));

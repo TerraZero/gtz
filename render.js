@@ -3,6 +3,69 @@ window.log = function () {
 };
 
 const user = require('./user.json');
+const GitHub = require('github-api');
+const gh = new GitHub(user);
+
+const manager = new (require('./system/Manager'))({
+  root: __dirname,
+});
+const $ = require('jquery');
+
+$('body').append(manager.getTemplate().get('pages.root'));
+
+manager.getStorage().add('repo', {
+  el: '#repo-list',
+  data: {
+    show: false,
+    item: {
+      height: 22,
+    },
+    items: [],
+    loading: false,
+  },
+  computed: {
+    styles: function () {
+      return {
+        height: (this.show ? this.item.height * this.items.length + 'px' : '0px'),
+      };
+    },
+    classes: function () {
+      return {
+        'list--content--show': this.show,
+      };
+    },
+  },
+  methods: {
+    update: function () {
+      if (this.show) {
+        this.show = false;
+        return;
+      }
+      const that = this;
+
+      that.loading = true;
+      that.show = true;
+      gh.getUser().listRepos({}, function (err, repos) {
+        const list = [];
+
+        for (const repo of repos) {
+          list.push({
+            name: repo.name,
+          });
+        }
+        that.items = list;
+        that.loading = false;
+      });
+    },
+    toggle: function () {
+      this.show = !this.show;
+    },
+  }
+});
+
+return;
+/*
+const user = require('./user.json');
 
 const GitHub = require('github-api');
 const axios = require('axios').create({
@@ -127,3 +190,4 @@ function showPatch(e) {
       log(arguments);
     });
 }
+*/
