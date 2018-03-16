@@ -5,7 +5,6 @@ const Vue = require('./../node_modules/vue/dist/vue.min.js');
 module.exports = class StorageManager {
 
   constructor(manager) {
-    this._manager = manager;
     this._vues = {};
   }
 

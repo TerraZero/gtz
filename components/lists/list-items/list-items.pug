@@ -1,0 +1,7 @@
+.list-items(id=id, v-bind:class='classes')
+  .list-items--header.base-pointer(v-on:click='update()')
+    | #{title}
+  .list-items--content(v-bind:style='styles')
+    .list-items--item.base-pointer(v-for='item in items')
+      | {{ item.name }}
+  .list-items--loader(v-if='loading')

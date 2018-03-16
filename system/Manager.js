@@ -4,8 +4,10 @@ module.exports = class Manager {
 
   constructor(settings) {
     this._window = null;
-    this._storage = null;
     this._template = null;
+    this._storage = null;
+    this._view = null;
+    this._page = null;
     this._settings = settings;
   }
 
@@ -32,6 +34,20 @@ module.exports = class Manager {
       this._template = new (require('./TemplateManager'))(this);
     }
     return this._template;
+  }
+
+  getView() {
+    if (this._view === null) {
+      this._view = new (require('./ViewManager'))(this);
+    }
+    return this._view;
+  }
+
+  getPage() {
+    if (this._page === null) {
+      this._page = new (require('./PageManager'))(this);
+    }
+    return this._page;
   }
 
 }

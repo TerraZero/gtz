@@ -1,16 +1,20 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-
 module.exports = class TemplateManager {
 
   constructor(manager) {
-    this._manager = manager;
+    this._templates = {};
   }
 
-  get(name) {
-    return fs.readFileSync(path.join(this._manager.getSetting('root'), 'src/html', name + '.html')).toString();
+  template(name) {
+    if (this._templates[name] === undefined) {
+      this._templates[name] = require('./../src/html/' + name);
+    }
+    return this._templates[name];
+  }
+
+  render(name, options) {
+    return this.template(name)(options);
   }
 
 }

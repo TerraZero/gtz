@@ -1,28 +1,18 @@
-#page-root
-  display: flex
-
-.page-root--left
-  width: 20%
-  background: #2a2a2b
-
-.page-root--right
-  width: 80%
-
-.list--header
+.list-items--header
   padding: 10px
   background: #3a3a3a
   &:hover
     background: #555555
 
-.list--content
+.list-items--content
   background: #111111
   overflow: hidden
   transition: height .1s ease-in-out
   max-height: 500px
-  .list--content--show &
+  .list-items--content--show &
     overflow-y: scroll
 
-.list--loader
+.list-items--loader
   background: #258fca
   position: relative
   height: 5px
@@ -35,17 +25,9 @@
     background: #075c8c
     top: 0
     left: 0
-    animation: loader 2s ease-in-out infinite
+    animation: loader-pin 2s ease-in-out infinite
 
-@keyframes loader
-  0%
-    left: 0px
-  50%
-    left: calc(100% - 30px)
-  100%
-    left: 0px
-
-.list--item
+.list-items--item
   padding: 2px 2px 2px 10px
   &:hover
     background: #444444

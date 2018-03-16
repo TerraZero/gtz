@@ -6,8 +6,10 @@ const gulp = require('gulp');
 
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
+
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
+const insert = require('gulp-insert');
 
 const sourcemaps = require('gulp-sourcemaps');
 
@@ -22,6 +24,11 @@ const paths = {
     watch: 'components/**/*.pug',
     dest: 'src/html',
   },
+  index: {
+    files: ['components/index/_index.pug'],
+    watch: ['components/index/_index.pug'],
+    dest: 'src',
+  }
 };
 
 const errorHandler = function (name) {
@@ -47,6 +54,7 @@ gulp.task('sass', function () {
 gulp.task('pug', function () {
   return gulp.src(paths.pug.files)
     .pipe(pug({
+      client: true,
       basedir: __dirname + '/components',
     }).on('error', errorHandler('pug')))
     .pipe(rename(function (file) {
@@ -55,14 +63,28 @@ gulp.task('pug', function () {
       file.basename = parts.join('.');
       file.dirname = '';
     }))
+    .pipe(insert.append('module.exports = template;'))
     .pipe(gulp.dest(paths.pug.dest));
 });
 
-gulp.task('build', ['sass', 'pug']);
+gulp.task('index', function () {
+  return gulp.src(paths.index.files)
+    .pipe(pug({
+      basedir: __dirname + '/components',
+    }).on('error', errorHandler('pug')))
+    .pipe(rename(function (file) {
+      file.basename = 'index';
+      file.dirname = '';
+    }))
+    .pipe(gulp.dest(paths.index.dest));
+});
+
+gulp.task('build', ['sass', 'pug', 'index']);
 
 gulp.task('watch', ['build'], function () {
   gulp.watch(paths.sass.watch, ['sass']);
   gulp.watch(paths.pug.watch, ['pug']);
+  gulp.watch(paths.index.watch, ['index']);
 });
 
 gulp.task('default', ['build']);
