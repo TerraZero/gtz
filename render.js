@@ -2,11 +2,19 @@ window.log = function () {
   console.log.apply(console, arguments);
 };
 
+const mousetrap = require('mousetrap');
+
 const manager = new (require('./system/Manager'))({
   root: __dirname,
+  user: require('./user.json'),
 });
 
 manager.getPage().getPage('EditorPage').mount();
+
+
+Mousetrap.bind(['command+p', 'ctrl+p'], function () {
+  manager.getView().getView('CommandOverlayView').getData().show = true;
+});
 
 return;
 /*

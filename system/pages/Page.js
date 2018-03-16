@@ -21,7 +21,7 @@ module.exports = class Page {
 
   create() { }
 
-  addView(view, mount) {
+  addView(view, mount = '') {
     this._views.getView(view).mount('#' + this.render.id + ' ' + mount);
   }
 

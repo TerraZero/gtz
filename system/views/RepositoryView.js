@@ -24,47 +24,43 @@ module.exports = class RepositoryView extends View {
     };
   }
 
-  get params() {
+  params(manager) {
     return {
 
       computed: {
+
         styles: function () {
           return {
             height: (this.show ? this.item.height * this.items.length + 'px' : '0px'),
           };
         },
+
         classes: function () {
           return {
             'list--content--show': this.show,
           };
         },
+
       },
 
       methods: {
-        update: function () {
-          if (this.show) {
-            this.show = false;
-            return;
-          }
-          const that = this;
 
-          that.loading = true;
-          that.show = true;
-          gh.getUser().listRepos({}, function (err, repos) {
-            const list = [];
-
-            for (const repo of repos) {
-              list.push({
-                name: repo.name,
-              });
-            }
-            that.items = list;
-            that.loading = false;
-          });
-        },
         toggle: function () {
           this.show = !this.show;
+          if (!this.show) return;
+
+          this.loading = true;
+          manager.getRequest().add('repos', [this, this.update]);
         },
+
+        update: function (req, data) {
+          this.items = [];
+          for (const repo of data) {
+            this.items.push(repo);
+          }
+          this.loading = false;
+        },
+
       },
 
     }

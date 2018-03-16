@@ -8,6 +8,8 @@ module.exports = class Manager {
     this._storage = null;
     this._view = null;
     this._page = null;
+    this._github = null;
+    this._request = null;
     this._settings = settings;
   }
 
@@ -48,6 +50,20 @@ module.exports = class Manager {
       this._page = new (require('./PageManager'))(this);
     }
     return this._page;
+  }
+
+  getGithub() {
+    if (this._github === null) {
+      this._github = new (require('./GithubManager'))(this);
+    }
+    return this._github;
+  }
+
+  getRequest() {
+    if (this._request === null) {
+      this._request = new (require('./RequestManager'))(this);
+    }
+    return this._request;
   }
 
 }

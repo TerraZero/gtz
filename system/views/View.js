@@ -6,6 +6,7 @@ const $ = require('jquery');
 module.exports = class View {
 
   constructor(manager) {
+    this._manager = manager;
     this._templates = manager.getTemplate();
     this._data = null;
     this._vue = null;
@@ -18,7 +19,7 @@ module.exports = class View {
 
   get data() { return {}; }
 
-  get params() { return {}; }
+  params(manager) { return {}; }
 
   mount(selector) {
     this._mount = $(selector).append(this._templates.render(this.template, this.render));
@@ -33,7 +34,7 @@ module.exports = class View {
   }
 
   create() {
-    const object = this.params;
+    const object = this.params(this._manager);
 
     object.el = '#' + this.render.id;
     object.data = this.getData();

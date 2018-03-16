@@ -14,6 +14,8 @@ module.exports = class EditorPage extends Page {
 
   create() {
     this.addView('RepositoryView', '.page-editor--left');
+    this.addView('StatusBarView', '.page-editor--status');
+    this.addView('CommandOverlayView');
   }
 
 }
