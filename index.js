@@ -1,7 +1,7 @@
 const manager = new (require('./system/Manager'))({
   root: __dirname,
 });
-const windowManager = manager.getWindow();
+const windowManager = manager.getWindowManager();
 
 const { app } = require('electron');
 

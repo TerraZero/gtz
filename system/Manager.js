@@ -17,49 +17,49 @@ module.exports = class Manager {
     return this._settings[name] || null;
   }
 
-  getWindow() {
+  getWindowManager() {
     if (this._window === null) {
       this._window = new (require('./WindowManager'))(this);
     }
     return this._window;
   }
 
-  getStorage() {
+  getStorageManager() {
     if (this._storage === null) {
       this._storage = new (require('./StorageManager'))(this);
     }
     return this._storage;
   }
 
-  getTemplate() {
+  getTemplateManager() {
     if (this._template === null) {
       this._template = new (require('./TemplateManager'))(this);
     }
     return this._template;
   }
 
-  getView() {
+  getViewManager() {
     if (this._view === null) {
       this._view = new (require('./ViewManager'))(this);
     }
     return this._view;
   }
 
-  getPage() {
+  getPageManager() {
     if (this._page === null) {
       this._page = new (require('./PageManager'))(this);
     }
     return this._page;
   }
 
-  getGithub() {
+  getGithubManager() {
     if (this._github === null) {
       this._github = new (require('./GithubManager'))(this);
     }
     return this._github;
   }
 
-  getRequest() {
+  getRequestManager() {
     if (this._request === null) {
       this._request = new (require('./RequestManager'))(this);
     }

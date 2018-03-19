@@ -5,8 +5,8 @@ const $ = require('jquery');
 module.exports = class Page {
 
   constructor(manager) {
-    this._views = manager.getView();
-    this._templates = manager.getTemplate();
+    this._views = manager.getViewManager();
+    this._templates = manager.getTemplateManager();
     this._mount = null;
   }
 

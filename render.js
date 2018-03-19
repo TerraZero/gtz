@@ -9,11 +9,18 @@ const manager = new (require('./system/Manager'))({
   user: require('./user.json'),
 });
 
-manager.getPage().getPage('EditorPage').mount();
-
+manager.getPageManager().getPage('EditorPage').mount();
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
-  manager.getView().getView('CommandOverlayView').getData().show = true;
+  manager.getViewManager().getView('CommandOverlayView').getData().show = true;
+});
+
+Mousetrap.bind(['esc'], function () {
+  const overlayview = manager.getViewManager().getView('CommandOverlayView');
+
+  if (overlayview.getData().show) {
+    overlayview.getData().show = false;
+  }
 });
 
 return;
