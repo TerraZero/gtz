@@ -50,7 +50,7 @@ module.exports = class RepositoryView extends View {
           if (!this.show) return;
 
           this.loading = true;
-          manager.getRequestManager().add('repos', [this, this.update]);
+          manager.getManager('RequestManager').add('repos', [this, this.update]);
         },
 
         update: function (req, data) {

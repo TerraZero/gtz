@@ -5,18 +5,22 @@ window.log = function () {
 const mousetrap = require('mousetrap');
 
 const manager = new (require('./system/Manager'))({
+  mode: 'render',
+  execute: __filename,
   root: __dirname,
   user: require('./user.json'),
 });
 
-manager.getPageManager().getPage('EditorPage').mount();
+manager.getManager('PageManager').getPage('EditorPage').mount();
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
-  manager.getViewManager().getView('CommandOverlayView').getData().show = true;
+  const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
+
+  overlayview.getData().show = !overlayview.getData().show;
 });
 
 Mousetrap.bind(['esc'], function () {
-  const overlayview = manager.getViewManager().getView('CommandOverlayView');
+  const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
 
   if (overlayview.getData().show) {
     overlayview.getData().show = false;

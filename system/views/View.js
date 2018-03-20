@@ -7,7 +7,7 @@ module.exports = class View {
 
   constructor(manager) {
     this._manager = manager;
-    this._templates = manager.getTemplateManager();
+    this._templates = manager.getManager('TemplateManager');
     this._data = null;
     this._vue = null;
     this._mount = null;

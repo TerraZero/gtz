@@ -3,8 +3,8 @@
 module.exports = class RequestManager {
 
   constructor(manager) {
-    this._status = manager.getViewManager().getView('StatusBarView');
-    this._github = manager.getGithubManager();
+    this._status = manager.getManager('ViewManager').getView('StatusBarView');
+    this._github = manager.getManager('GithubManager');
     this._requests = [];
     this._running = false;
   }
