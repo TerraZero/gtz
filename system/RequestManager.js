@@ -2,11 +2,12 @@
 
 module.exports = class RequestManager {
 
-  constructor(manager) {
+  constructor(manager, config) {
+    this._config = config;
+    this._storage = manager.getManager('StorageManager');
     this._status = manager.getManager('ViewManager').getView('StatusBarView');
     this._github = manager.getManager('GithubManager');
-    this._requests = [];
-    this._running = false;
+    this._requests = {};
   }
 
   status(message, request = null) {
@@ -15,46 +16,58 @@ module.exports = class RequestManager {
   }
 
   tick() {
-    if (!this._running && this._requests.length) {
-      this._running = true;
-      const request = this._requests[0];
+    let l = 0;
 
+    for (const index in this._requests) {
+      const request = this._requests[index];
+
+      l++;
+      if (l === this._config.limit) break;
+      if (request.running) continue;
       log('HANDLE REQUEST:', request);
-      this.status('HANDLE REQUEST');
-      this._github[request.command](this.update.bind(this));
+      request.running = true;
+      request.storage = this._github[request.command](request, this.update.bind(this));
     }
   }
 
   add(command, callback) {
-    this._requests.push({ command, callback });
-    log('ADD REQUEST:', this._requests[this._requests.length - 1]);
-    this.status('ADD REQUEST', this._requests[this._requests.length - 1]);
+    if (this._requests[command] !== undefined) {
+      this._requests[command].callbacks.push(callback);
+    } else {
+      this._requests[command] = {
+        command: command,
+        callbacks: [callback],
+        running: false,
+      };
+    }
     this.tick();
   }
 
-  update(err, data) {
+  update(err, request, data) {
     if (err) return this.error(err);
 
-    log('UPDATE REQUEST:', this._requests[0]);
-    this.status('UPDATE REQUEST');
-    this.callback(this._requests.shift(), data);
-    this._running = false;
+    log('UPDATE REQUEST:', request);
+    this._storage.update(request.storage, data);
+    this.callback(request, data);
+    request.running = false;
+    delete this._requests[request.command];
     this.tick();
   }
 
   error(err) {
     log('ERROR REQUEST:', this._requests[0]);
-    this.status('ERROR REQUEST');
   }
 
   callback(request, data) {
-    if (typeof request.callback === 'function') {
-      return request.callback(request, data);
-    } else if (Array.isArray(request.callback)) {
-      if (request.callback.length === 1) {
-        return request.callback[0](request, data);
-      } else if (request.callback.length === 2) {
-        return request.callback[1].call(request.callback[0], request, data);
+    for (const callback of request.callbacks) {
+      if (typeof callback === 'function') {
+        return callback(request, data);
+      } else if (Array.isArray(callback)) {
+        if (callback.length === 1) {
+          return callback[0](request, data);
+        } else if (callback.length === 2) {
+          return callback[1].call(callback[0], request, data);
+        }
       }
     }
     console.error('Callback is not valid for command "' + request.command + '".');

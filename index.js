@@ -3,6 +3,7 @@ const manager = new (require('./system/Manager'))({
   execute: __filename,
   root: __dirname,
   user: require('./user.json'),
+  managers: {},
 });
 const windowManager = manager.getManager('WindowManager');
 

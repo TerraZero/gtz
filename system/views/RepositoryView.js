@@ -19,10 +19,11 @@ module.exports = class RepositoryView extends View {
       item: {
         height: 22,
       },
-      items: [],
       loading: false,
     };
   }
+
+  get storage() { return 'repos'; }
 
   params(manager) {
     return {
@@ -41,6 +42,10 @@ module.exports = class RepositoryView extends View {
           };
         },
 
+        items: function () {
+          return this.storage.data;
+        },
+
       },
 
       methods: {
@@ -54,10 +59,6 @@ module.exports = class RepositoryView extends View {
         },
 
         update: function (req, data) {
-          this.items = [];
-          for (const repo of data) {
-            this.items.push(repo);
-          }
           this.loading = false;
         },
 

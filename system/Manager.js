@@ -13,7 +13,11 @@ module.exports = class Manager {
 
   getManager(name) {
     if (this._managers[name] === undefined) {
-      this._managers[name] = new (require('./' + name))(this);
+      let config = {};
+      if (this._settings.managers[name] !== undefined) {
+        config = this._settings.managers[name];
+      }
+      this._managers[name] = new (require('./' + name))(this, config);
     }
     return this._managers[name];
   }

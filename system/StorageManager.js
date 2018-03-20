@@ -7,18 +7,24 @@ module.exports = class StorageManager {
     this._storage = {};
   }
 
-  addStorage(name, manager, data = {}) {
+  addStorage(name, data = {}) {
     this._storage[name] = {
-      manager: manager.constructor.name,
       data: data,
     };
   }
 
-  addSolid(name, manager, data = {}) {
+  addSolid(name, data = {}) {
     this._solid[name] = {
-      manager: manager.constructor.name,
       data: data,
     };
+  }
+
+  getStorage(name) {
+    return this._storage[name];
+  }
+
+  update(name, value = {}) {
+    this._storage[name].data = value;
   }
 
 }

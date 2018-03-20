@@ -7,6 +7,7 @@ module.exports = class View {
 
   constructor(manager) {
     this._manager = manager;
+    this._storage = manager.getManager('StorageManager');
     this._templates = manager.getManager('TemplateManager');
     this._data = null;
     this._vue = null;
@@ -19,6 +20,8 @@ module.exports = class View {
 
   get data() { return {}; }
 
+  get storage() { return ''; }
+
   params(manager) { return {}; }
 
   mount(selector) {
@@ -29,6 +32,7 @@ module.exports = class View {
   getData() {
     if (this._data === null) {
       this._data = this.data;
+      this._data.storage = this._storage.getStorage('repos');
     }
     return this._data;
   }

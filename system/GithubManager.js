@@ -8,8 +8,11 @@ module.exports = class GithubManager {
     this._api = new GitHub(manager.getSetting('user'));
   }
 
-  repos(cb) {
-    this._api.getUser().listRepos({}, cb);
+  repos(request, cb) {
+    this._api.getUser().listRepos({}, function (err, data) {
+      cb(err, request, data);
+    });
+    return 'repos';
   }
 
 }

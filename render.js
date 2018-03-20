@@ -9,8 +9,14 @@ const manager = new (require('./system/Manager'))({
   execute: __filename,
   root: __dirname,
   user: require('./user.json'),
+  managers: {
+    RequestManager: {
+      limit: 5,
+    },
+  }
 });
 
+manager.getManager('StorageManager').addStorage('repos');
 manager.getManager('PageManager').getPage('EditorPage').mount();
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
