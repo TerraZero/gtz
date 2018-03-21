@@ -50,6 +50,14 @@ module.exports = class RepositoryView extends View {
 
       methods: {
 
+        itemClasses: function (item) {
+          return item.name;
+        },
+
+        active(item) {
+
+        },
+
         toggle: function () {
           this.show = !this.show;
           if (!this.show) return;

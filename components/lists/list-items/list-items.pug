@@ -2,6 +2,6 @@
   .list-items--header.base-pointer(v-on:click='toggle()')
     | #{title}
   .list-items--content(v-bind:style='styles')
-    .list-items--item.base-pointer(v-for='item in items')
+    .list-items--item.base-pointer(v-for='item in items', v-on:click='active(item)', v-bind:class='itemClasses(item)')
       | {{ item.name }}
   .list-items--loader(v-if='loading')
