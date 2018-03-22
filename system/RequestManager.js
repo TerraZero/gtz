@@ -24,7 +24,6 @@ module.exports = class RequestManager {
       l++;
       if (l === this._config.limit) break;
       if (request.running) continue;
-      log('HANDLE REQUEST:', request);
       request.running = true;
       request.storage = this._github[request.command](request, this.update.bind(this));
     }
@@ -44,9 +43,8 @@ module.exports = class RequestManager {
   }
 
   update(err, request, data) {
-    if (err) return this.error(err);
+    if (err) return this.error(err, request, data);
 
-    log('UPDATE REQUEST:', request);
     this._storage.update(request.storage, data);
     this.callback(request, data);
     request.running = false;
@@ -54,8 +52,11 @@ module.exports = class RequestManager {
     this.tick();
   }
 
-  error(err) {
-    log('ERROR REQUEST:', this._requests[0]);
+  error(err, request, data) {
+    log('ERROR');
+    log(err);
+    log(request);
+    log(data);
   }
 
   callback(request, data) {

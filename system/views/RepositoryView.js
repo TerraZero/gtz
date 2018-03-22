@@ -23,7 +23,7 @@ module.exports = class RepositoryView extends View {
     };
   }
 
-  get storage() { return 'repos'; }
+  get storages() { return ['repos']; }
 
   params(manager) {
     return {
@@ -32,7 +32,7 @@ module.exports = class RepositoryView extends View {
 
         styles: function () {
           return {
-            height: (this.show ? this.item.height * this.items.length + 'px' : '0px'),
+            height: (this.show ? this.item.height * this.storages.repos.length + 'px' : '0px'),
           };
         },
 
@@ -43,7 +43,7 @@ module.exports = class RepositoryView extends View {
         },
 
         items: function () {
-          return this.storage.data;
+          return this.storages.repos.values;
         },
 
       },
@@ -51,7 +51,7 @@ module.exports = class RepositoryView extends View {
       methods: {
 
         itemClasses: function (item) {
-          return item.name;
+          return 'test';
         },
 
         active(item) {

@@ -20,7 +20,7 @@ module.exports = class View {
 
   get data() { return {}; }
 
-  get storage() { return ''; }
+  get storages() { return []; }
 
   params(manager) { return {}; }
 
@@ -32,7 +32,10 @@ module.exports = class View {
   getData() {
     if (this._data === null) {
       this._data = this.data;
-      this._data.storage = this._storage.getStorage('repos');
+      this._data.storages = {};
+      for (const name of this.storages) {
+        this._data.storages[name] = this._storage.get(name);
+      }
     }
     return this._data;
   }

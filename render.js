@@ -2,6 +2,9 @@ window.log = function () {
   console.log.apply(console, arguments);
 };
 
+const remote = require('electron').remote;
+remote.getCurrentWindow().setBounds(remote.screen.getPrimaryDisplay().bounds);
+
 const mousetrap = require('mousetrap');
 
 const manager = new (require('./system/Manager'))({
@@ -9,14 +12,9 @@ const manager = new (require('./system/Manager'))({
   execute: __filename,
   root: __dirname,
   user: require('./user.json'),
-  managers: {
-    RequestManager: {
-      limit: 5,
-    },
-  }
+  managers: require('./managers.json'),
 });
 
-manager.getManager('StorageManager').addStorage('repos');
 manager.getManager('PageManager').getPage('EditorPage').mount();
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {

@@ -1,0 +1,14 @@
+{
+  "RequestManager": {
+    "limit": 5
+  },
+  "StorageManager": {
+    "repos": {
+      "type": "storage",
+      "key": "name",
+      "template": {
+        "active": false
+      }
+    }
+  }
+}

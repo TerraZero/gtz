@@ -3,5 +3,5 @@
     | #{title}
   .list-items--content(v-bind:style='styles')
     .list-items--item.base-pointer(v-for='item in items', v-on:click='active(item)', v-bind:class='itemClasses(item)')
-      | {{ item.name }}
+      | {{ item.data.name }}
   .list-items--loader(v-if='loading')
