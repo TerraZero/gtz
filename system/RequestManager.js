@@ -4,15 +4,9 @@ module.exports = class RequestManager {
 
   constructor(manager, config) {
     this._config = config;
-    this._storage = manager.getManager('StorageManager');
-    this._status = manager.getManager('ViewManager').getView('StatusBarView');
+    this._manager = manager;
     this._github = manager.getManager('GithubManager');
     this._requests = {};
-  }
-
-  status(message, request = null) {
-    request = request || this._requests[0];
-    this._status.getData().status = message + ': ' + request.command;
   }
 
   tick() {
@@ -25,7 +19,7 @@ module.exports = class RequestManager {
       if (l === this._config.limit) break;
       if (request.running) continue;
       request.running = true;
-      request.storage = this._github[request.command](request, this.update.bind(this));
+      this._github[request.command](request, this.update.bind(this));
     }
   }
 
@@ -45,8 +39,7 @@ module.exports = class RequestManager {
   update(err, request, data) {
     if (err) return this.error(err, request, data);
 
-    this._storage.update(request.storage, data);
-    this.callback(request, data);
+    this._manager.callback(request.callbacks, request, data);
     request.running = false;
     delete this._requests[request.command];
     this.tick();
@@ -57,21 +50,6 @@ module.exports = class RequestManager {
     log(err);
     log(request);
     log(data);
-  }
-
-  callback(request, data) {
-    for (const callback of request.callbacks) {
-      if (typeof callback === 'function') {
-        return callback(request, data);
-      } else if (Array.isArray(callback)) {
-        if (callback.length === 1) {
-          return callback[0](request, data);
-        } else if (callback.length === 2) {
-          return callback[1].call(callback[0], request, data);
-        }
-      }
-    }
-    console.error('Callback is not valid for command "' + request.command + '".');
   }
 
 }

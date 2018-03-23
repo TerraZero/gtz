@@ -15,12 +15,18 @@ module.exports = class CommandOverlayView extends View {
   get data() {
     return {
       show: false,
+      status: {
+        input: true,
+        classes: {
+          modal: false,
+        }
+      },
       input: '',
       item: {
         height: 22,
       },
       focus: -1,
-      items: [],
+      options: [],
     };
   }
 
@@ -31,37 +37,119 @@ module.exports = class CommandOverlayView extends View {
 
         styles: function () {
           return {
-            height: (this.show ? this.item.height * this.options.length + 'px' : '0px'),
+            height: (this.show ? this.item.height * this.filtered.length + 'px' : '0px'),
           }
         },
 
-        options: function () {
-          const options = [];
+        filtered() {
+          const filtered = [];
 
-          for (const index in options) {
-
+          for (const index in this.options) {
+            if (this.options[index].show) {
+              filtered.push(this.options[index]);
+            }
           }
-          return this.items;
+          return filtered;
         },
 
       },
 
       methods: {
 
-        goFocus: function (delta = 0) {
-          this.focus += delta;
-          this.focus %= this.items.length;
-          if (this.focus < 0) this.focus = this.items.length - 1;
+        keyup(event) {
+          switch (event.keyCode) {
+            // Down
+            case 40:
+            // Tab
+            case 9:
+              this.goFocus(1);
+              event.preventDefault();
+              break;
+            // Up
+            case 38:
+              this.goFocus(-1);
+              event.preventDefault();
+              break;
+            // Enter
+            case 13:
+              this.action();
+              event.preventDefault();
+              break;
+            default:
+              this.filter();
+              break;
+          }
         },
 
-        getClasses: function (index = 0) {
-          if (this.focus === index) return ['focus'];
-          return [];
+        filter: function () {
+          if (this.focus !== -1) {
+            this.filtered[this.focus].classes.focus = false;
+            this.focus = -1;
+          }
+          const input = this.input.toLowerCase();
+          for (const option of this.options) {
+            option.show = option.name.toLowerCase().indexOf(input) >= 0;
+          }
+        },
+
+        goFocus: function (delta = 0) {
+          if (this.filtered[this.focus] !== undefined) this.filtered[this.focus].classes.focus = false;
+          this.focus += delta;
+          this.focus %= this.filtered.length;
+          if (this.focus < 0) this.focus = this.filtered.length - 1;
+          if (this.filtered[this.focus] !== undefined) this.filtered[this.focus].classes.focus = true;
+        },
+
+        action(option = null) {
+          if (option === null) {
+            if (this.filtered.length === 1) {
+              option = this.filtered[0];
+            } else if (this.filtered[this.focus] !== undefined) {
+              option = this.filtered[this.focus];
+            }
+          }
+          if (option !== null) {
+            this.show = false;
+            manager.callback([this.status.callback], this.options, option, option.index);
+          }
         },
 
       },
 
     };
+  }
+
+  clearOptions() {
+    const data = this.getData();
+
+    data.options = [];
+    data.focus = -1;
+  }
+
+  addOption(name) {
+    const data = this.getData();
+
+    data.options.push({
+      name: name,
+      show: true,
+      classes: {
+        focus: false,
+      },
+      index: data.options.length,
+    });
+  }
+
+  openSelect(options, callback) {
+    this.clearOptions();
+    const data = this.getData();
+
+    for (const option of options) {
+      this.addOption(option);
+    }
+
+    data.status.callback = callback;
+    data.status.classes.modal = true;
+    data.show = true;
   }
 
 }

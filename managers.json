@@ -3,12 +3,12 @@
     "limit": 5
   },
   "StorageManager": {
+    "watchRepos": {
+      "type": "solid"
+    },
     "repos": {
       "type": "storage",
-      "key": "name",
-      "template": {
-        "active": false
-      }
+      "command": "repos"
     }
   }
 }

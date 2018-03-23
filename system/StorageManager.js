@@ -3,63 +3,41 @@
 module.exports = class StorageManager {
 
   constructor(manager, config = {}) {
+    this._manager = manager;
+    this._request = manager.getManager('RequestManager');
     this._config = config;
     this._data = {
       solid: {},
       storage: {},
     };
     for (const name in config) {
-      this._data[config[name].type][name] = {
-        values: {},
-        length: 0,
-      };
+      this._data[config[name].type][name] = null;
     }
   }
 
-  get(name) {
-    const info = this._config[name];
-
-    return this._data[info.type][name];
+  getInfo(name) {
+    return this._config[name];
   }
 
-  update(name, value) {
-    const info = this._config[name];
-    const storage = this._data[info.type][name];
+  get(name, callback) {
+    const info = this.getInfo(name);
 
-    if (info.key === undefined) {
-      const values = [];
-
-      for (const index in value) {
-        const item = this.clone(info.template);
-
-        item.data = value[index];
-        values.push(item);
-      }
-      storage.values = values;
-      storage.length = values.length;
+    if (this._data[info.type][name]) {
+      this._manager.callback([callback], this._data[info.type][name]);
     } else {
-      const values = {};
-      let length = 0;
-
-      for (const index in value) {
-        const item = this.clone(info.template);
-
-        item.data = value[index];
-        item.key = item.data[info.key];
-        storage.values[item.key] = item;
-        length++;
-      }
-      storage.length = length;
+      this._request.add(info.command, [this, this.update, { name, callback }]);
     }
   }
 
-  clone(object) {
-    const clone = {};
+  update(param, request, values) {
+    this.set(param.name, values);
+    this._manager.callback([param.callback], values);
+  }
 
-    for (const index in object) {
-      clone[index] = object[index];
-    }
-    return clone;
+  set(name, values) {
+    const info = this.getInfo(name);
+
+    this._data[info.type][name] = values;
   }
 
 }

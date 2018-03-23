@@ -1,0 +1,10 @@
+extends /lists/list-items/list-items
+
+block header
+  .list-items--header.base-pointer(v-on:click='toggle()')
+    .list-items--header-title
+      | #{title}
+    .list-items--header-count
+      | {{ count }}
+    .list-items--header-add(v-on:click.stop='addRepo()')
+      | +

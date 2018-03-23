@@ -4,7 +4,7 @@ const View = require('./View');
 
 module.exports = class RepositoryView extends View {
 
-  get template() { return 'lists.list-items'; }
+  get template() { return 'lists.repos-view'; }
 
   get render() {
     return {
@@ -20,54 +20,60 @@ module.exports = class RepositoryView extends View {
         height: 22,
       },
       loading: false,
+      items: [],
     };
   }
-
-  get storages() { return ['repos']; }
 
   params(manager) {
     return {
 
       computed: {
 
-        styles: function () {
-          return {
-            height: (this.show ? this.item.height * this.storages.repos.length + 'px' : '0px'),
-          };
-        },
-
-        classes: function () {
+        classes() {
           return {
             'list--content--show': this.show,
           };
         },
 
-        items: function () {
-          return this.storages.repos.values;
+        styles() {
+          return {
+            height: (this.show ? this.item.height * this.items.length + 'px' : '0px'),
+          };
         },
+
+        count() {
+          return 0 + ' / ' + this.items.length;
+        }
 
       },
 
       methods: {
 
-        itemClasses: function (item) {
-          return 'test';
-        },
-
-        active(item) {
-
-        },
-
-        toggle: function () {
+        toggle() {
           this.show = !this.show;
           if (!this.show) return;
-
-          this.loading = true;
-          manager.getManager('RequestManager').add('repos', [this, this.update]);
         },
 
-        update: function (req, data) {
+        addRepo() {
+          this.loading = true;
+          manager.getManager('StorageManager').get('repos', [this, this.addRepoCallback]);
+        },
+
+        addRepoCallback(repos) {
+          const options = [];
+
+          for (const repo of repos) {
+            if (this.items.indexOf(repo.name) === -1) {
+              options.push(repo.name);
+            }
+          }
+          manager.getManager('ViewManager').getView('CommandOverlayView').openSelect(options, [this, this.addRepoSelect]);
           this.loading = false;
+        },
+
+        addRepoSelect(options, select, index) {
+          this.items.push(select.name);
+          manager.getManager('StorageManager').set('watchRepos', this.items);
         },
 
       },

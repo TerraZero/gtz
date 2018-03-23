@@ -1,8 +1,8 @@
-.command-overlay(id=id, v-if='show')
+.command-overlay(id=id, v-if='show', v-bind:class='status.classes', v-on:keyup.prevent='keyup')
   .command-overlay--content
-    .command-overlay--header
-      input.command-overlay--input(type='text', v-model='input', v-on:keyup.up='goFocus(-1)', v-on:keyup.down='goFocus(1)')
+    .command-overlay--header(v-if='status.input')
+      input.command-overlay--input(type='text', v-model='input')
     .command-overlay--options(v-bind:style='styles')
-      .command-overlay--option.base-pointer(v-for='(option, index) in options', v-bind:class='getClasses(index)')
+      .command-overlay--option.base-pointer(v-for='option in options', v-bind:class='option.classes', v-on:click='action(option)', v-if='option.show')
         | {{ option.name }}
 

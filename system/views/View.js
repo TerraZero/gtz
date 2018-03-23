@@ -32,10 +32,6 @@ module.exports = class View {
   getData() {
     if (this._data === null) {
       this._data = this.data;
-      this._data.storages = {};
-      for (const name of this.storages) {
-        this._data.storages[name] = this._storage.get(name);
-      }
     }
     return this._data;
   }

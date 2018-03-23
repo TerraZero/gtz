@@ -12,7 +12,6 @@ module.exports = class GithubManager {
     this._api.getUser().listRepos({}, function (err, data) {
       cb(err, request, data);
     });
-    return 'repos';
   }
 
 }

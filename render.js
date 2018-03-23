@@ -21,12 +21,9 @@ Mousetrap.bind(['command+p', 'ctrl+p'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
 
   overlayview.getData().show = !overlayview.getData().show;
-  overlayview.getData().items.push({
-    name: 'Hallo',
-  });
-  overlayview.getData().items.push({
-    name: 'Hallo 2',
-  });
+  overlayview
+    .addItem('hallo')
+    .addItem('Hallo 2');
 });
 
 Mousetrap.bind(['esc'], function () {

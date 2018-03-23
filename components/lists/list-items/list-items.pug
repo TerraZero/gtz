@@ -1,7 +1,11 @@
 .list-items(id=id, v-bind:class='classes')
-  .list-items--header.base-pointer(v-on:click='toggle()')
-    | #{title}
-  .list-items--content(v-bind:style='styles')
-    .list-items--item.base-pointer(v-for='item in items', v-on:click='active(item)', v-bind:class='itemClasses(item)')
-      | {{ item.data.name }}
-  .list-items--loader(v-if='loading')
+  block header
+    .list-items--header.base-pointer(v-on:click='toggle()')
+      | #{title}
+  block content
+    .list-items--content(v-bind:style='styles')
+      block items
+        .list-items--item.base-pointer(v-for='item in items')
+          | {{ item }}
+  block loader
+    .list-items--loader(v-if='loading')
