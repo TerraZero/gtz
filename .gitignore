@@ -1,4 +1,9 @@
 .vscode
 node_modules
-user.json
-src
+
+/user.json
+
+/src
+
+/data/*
+!/data/.gitkeep

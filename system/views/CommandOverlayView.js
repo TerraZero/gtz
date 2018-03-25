@@ -4,7 +4,7 @@ const View = require('./View');
 
 module.exports = class CommandOverlayView extends View {
 
-  get template() { return 'overlay.command-overlay'; }
+  get template() { return 'overlay.command'; }
 
   get render() {
     return {

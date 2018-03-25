@@ -1,5 +1,5 @@
 const manager = new (require('./system/Manager'))({
-  mode: 'render',
+  mode: 'main',
   execute: __filename,
   root: __dirname,
   user: require('./user.json'),

@@ -3,6 +3,7 @@ window.log = function () {
 };
 
 const remote = require('electron').remote;
+
 remote.getCurrentWindow().setBounds(remote.screen.getPrimaryDisplay().bounds);
 
 const mousetrap = require('mousetrap');
@@ -15,15 +16,17 @@ const manager = new (require('./system/Manager'))({
   managers: require('./managers.json'),
 });
 
-manager.getManager('PageManager').getPage('EditorPage').mount();
+window.addEventListener('beforeunload', function () {
+  manager.triggerMessage('system:exit', 'Exit');
+});
+
+manager.getManager('PageManager').getPage('SystemPage').mount('body');
+manager.triggerMessage('system:exit', 'Exit');
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
 
   overlayview.getData().show = !overlayview.getData().show;
-  overlayview
-    .addItem('hallo')
-    .addItem('Hallo 2');
 });
 
 Mousetrap.bind(['esc'], function () {

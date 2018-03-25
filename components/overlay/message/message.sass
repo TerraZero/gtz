@@ -1,0 +1,68 @@
+.message-overlay
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(0, 0, 0, 0.8)
+
+.message-overlay--content
+  position: absolute
+  display: flex
+  flex-wrap: wrap
+  top: calc(50vh - 100px)
+  left: calc(50vw - 250px)
+  width: 500px
+  height: 200px
+  background: #3a3a3a
+
+.message-overlay--header
+  width: 100%
+  height: 35px
+  padding: 2px 5px;
+  box-sizing: border-box
+  font-size: 25px
+
+.message-overlay--message
+  width: 100%
+  height: 105px
+  padding: 15px
+  box-sizing: border-box
+
+.message-overlay--footer
+  width: 100%
+  height: 60px
+  box-sizing: border-box
+  display: flex
+  flex-wrap: wrap
+  background: #212121
+
+.message-overlay--status
+  width: 100%
+  height: calc(100% - 14px)
+  box-sizing: border-box
+  padding: 10px
+  line-height: 25px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.message-overlay--loader
+  width: 100%
+  height: 14px
+  display: flex
+  flex-wrap: wrap
+
+.message-overlay--loader-finite,
+.message-overlay--loader-infinity,
+  width: 100%
+  height: 14px
+  .is-subloader &
+    height: 7px
+
+.message-overlay--subloader-finite,
+.message-overlay--subloader-infinity
+  width: 100%
+  height: 7px
+  background: #3ce63c
+  border-left-color: #0fa50f

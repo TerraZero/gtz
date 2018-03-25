@@ -1,0 +1,11 @@
+.message-overlay(id=id, v-if='show')
+  .message-overlay--content
+    .message-overlay--header {{ header }}
+    .message-overlay--message {{ message }}
+    .message-overlay--footer
+      .message-overlay--status {{ status }}
+      .message-overlay--loader(v-bind:class='subloaderclass')
+        .message-overlay--loader-infinity.loader-infinity(v-if='!count')
+        .message-overlay--loader-finite.loader-finite(v-if='count', v-bind:style='loader')
+        .message-overlay--subloader-infinity.loader-infinity(v-if='!subcount && subshow')
+        .message-overlay--subloader-finite.loader-finite(v-if='subcount && subshow', v-bind:style='subloader')

@@ -6,6 +6,7 @@ module.exports = class Page {
 
   constructor(manager) {
     this._views = manager.getManager('ViewManager');
+    this._pages = manager.getManager('PageManager');
     this._templates = manager.getManager('TemplateManager');
     this._mount = null;
   }
@@ -14,7 +15,7 @@ module.exports = class Page {
 
   get render() { return {}; }
 
-  mount(selector = 'body') {
+  mount(selector = '.system-root') {
     this._mount = $(selector).append(this._templates.template(this.template)(this.render));
     this.create();
   }
@@ -23,6 +24,10 @@ module.exports = class Page {
 
   addView(view, mount = '') {
     this._views.getView(view).mount('#' + this.render.id + ' ' + mount);
+  }
+
+  addPage(page, mount = '.system-root') {
+    this._pages.getPage(page).mount(mount);
   }
 
 }
