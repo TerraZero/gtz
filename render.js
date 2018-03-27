@@ -21,7 +21,14 @@ window.addEventListener('beforeunload', function () {
 });
 
 manager.getManager('PageManager').getPage('SystemPage').mount('body');
-manager.triggerMessage('system:exit', 'Exit');
+const message = this.getManager('ViewManager').getView('MessageOverlayView');
+
+new Promise(function (next, err) {
+  message.open('Test', 'test message')
+  setTimeout(function () {
+    next();
+  }, 1000);
+});
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
