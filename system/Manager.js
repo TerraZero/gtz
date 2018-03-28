@@ -1,11 +1,27 @@
 'use strict';
 
+const Batch = require('./util/Batch');
+
 module.exports = class Manager {
+
+  static get NORMAL() { return 'NORMAL'; }
+  static get BOOT() { return 'BOOT'; }
+  static get EXIT() { return 'EXIT'; }
 
   constructor(settings) {
     this._settings = settings;
+    this._status = Manager.BOOT;
     this._managers = {};
     this._listeners = {};
+    this._batches = {};
+  }
+
+  setStatus(status) {
+    this._status = status;
+  }
+
+  getStatus() {
+    return this._status;
   }
 
   getSetting(name) {
@@ -51,6 +67,12 @@ module.exports = class Manager {
     return this;
   }
 
+  addBatch(event, callback) {
+    if (this._batches[event] === undefined) this._batches[event] = [];
+    this._batches[event].push(callback);
+    return this;
+  }
+
   trigger(event, ...args) {
     if (this._listeners[event] !== undefined) {
       for (const listener of this._listeners[event]) {
@@ -59,18 +81,14 @@ module.exports = class Manager {
     }
   }
 
-  triggerMessage(event, header, ...args) {
-    if (this._listeners[event] === undefined) return;
-    const message = this.getManager('ViewManager').getView('MessageOverlayView');
+  batch(event, Struckt = null, ...args) {
+    if (this._batches[event] === undefined) return null;
+    if (Struckt === null) Struckt = require('./util/Batch');
+    const batch = new Struckt(this);
 
-    message.open(header, '', this._listeners[event].length, true);
-    args.unshift(message);
-    for (const listener of this._listeners[event]) {
-      const process = listener.options && listener.options.message || '';
-
-      message.setMessage(process);
-      this.callback([listener.callback], ...args);
-    }
+    args.unshift(batch);
+    this.callback(this._batches[event], ...args);
+    return batch;
   }
 
 }

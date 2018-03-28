@@ -1,3 +1,5 @@
+'use strict';
+
 window.log = function () {
   console.log.apply(console, arguments);
 };
@@ -8,7 +10,8 @@ remote.getCurrentWindow().setBounds(remote.screen.getPrimaryDisplay().bounds);
 
 const mousetrap = require('mousetrap');
 
-const manager = new (require('./system/Manager'))({
+const Manager = require('./system/Manager');
+const manager = new Manager({
   mode: 'render',
   execute: __filename,
   root: __dirname,
@@ -16,19 +19,20 @@ const manager = new (require('./system/Manager'))({
   managers: require('./managers.json'),
 });
 
-window.addEventListener('beforeunload', function () {
-  manager.triggerMessage('system:exit', 'Exit');
+window.addEventListener('beforeunload', function (e) {
+  if (manager.getStatus() !== Manager.EXIT) e.returnValue = false;
+  manager.setStatus(Manager.EXIT);
+
+  const message = manager.getManager('ViewManager').getView('MessageOverlayView');
+  const MessageBatch = require('./system/util/MessageBatch');
+  const batch = manager.batch('system:exit', MessageBatch);
+  batch.execute(message, 'Process: system:exit').then(function () {
+    require('electron').remote.app.quit();
+  });
 });
 
 manager.getManager('PageManager').getPage('SystemPage').mount('body');
-const message = this.getManager('ViewManager').getView('MessageOverlayView');
-
-new Promise(function (next, err) {
-  message.open('Test', 'test message')
-  setTimeout(function () {
-    next();
-  }, 1000);
-});
+manager.getManager('StorageManager');
 
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
@@ -43,7 +47,7 @@ Mousetrap.bind(['esc'], function () {
     overlayview.getData().show = false;
   }
 });
-
+manager.setStatus(Manager.NORMAL);
 return;
 /*
 const user = require('./user.json');

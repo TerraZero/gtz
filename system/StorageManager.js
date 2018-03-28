@@ -20,7 +20,7 @@ module.exports = class StorageManager {
       this._data[config[name].type][name] = null;
       this._count[config[name].type]++;
     }
-    manager.addListener('system:exit', { message: 'Save data' }, [this, this.onSystemExit]);
+    manager.addBatch('system:exit', [this, this.batchSystemExit]);
   }
 
   getInfo(name) {
@@ -48,14 +48,22 @@ module.exports = class StorageManager {
     this._data[info.type][name] = values;
   }
 
-  onSystemExit(message) {
-    message.openSub(this._count.solid);
+  batchSystemExit(batch) {
     const root = this._manager.getSetting('root') + '/data';
 
-    for (const index in this._data.solid) {
-      message.updateStatus('Save: ' + index + ' to "data/' + index + '.solid.json"');
-      fs.writeFileSync(root + '/' + index + '.solid.json', JSON.stringify(this._data.solid[index]));
+    batch.addGroup(this.constructor.name, 'Storage: Save solid user data into file system. File: ' + root);
+    for (const name in this._data.solid) {
+      batch.add([this, this.onSystemExit], root, name, this._data.solid[name]);
     }
+  }
+
+  onSystemExit(next, data, root, name, solid) {
+    data.message.updateStatus('Save: ' + name + ' to "data/' + name + '.solid.json"');
+    fs.writeFile(root + '/' + name + '.solid.json', JSON.stringify(solid), function () {
+      setTimeout(function () {
+        next(data);
+      }, 3000);
+    });
   }
 
 }

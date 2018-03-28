@@ -1,4 +1,7 @@
-const manager = new (require('./system/Manager'))({
+'use strict';
+
+const Manager = require('./system/Manager');
+const manager = new Manager({
   mode: 'main',
   execute: __filename,
   root: __dirname,
@@ -28,3 +31,4 @@ app.on('activate', () => {
     height: 600,
   });
 });
+manager.setStatus(manager.NORMAL);

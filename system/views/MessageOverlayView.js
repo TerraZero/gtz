@@ -19,9 +19,9 @@ module.exports = class MessageOverlayView extends View {
       header: null,
       message: null,
       status: null,
-      current: 0,
+      current: -1,
       count: 0,
-      subcurrent: 0,
+      subcurrent: -1,
       subcount: 0,
       width: 500,
     };
@@ -84,7 +84,7 @@ module.exports = class MessageOverlayView extends View {
   open(header, message, count = 0, sub = false, status = null, show = true) {
     const data = this.getData();
 
-    data.current = 0;
+    data.current = -1;
     data.header = header;
     data.message = message;
     data.count = count;
@@ -99,8 +99,9 @@ module.exports = class MessageOverlayView extends View {
   openSub(count = 0) {
     const data = this.getData();
 
-    data.subcurrent = 0;
+    data.subcurrent = -1;
     data.subcount = count;
+    data.subshow = true;
     return this;
   }
 
