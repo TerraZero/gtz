@@ -24,16 +24,16 @@ window.addEventListener('beforeunload', function (e) {
   manager.setStatus(Manager.EXIT);
 
   const message = manager.getManager('ViewManager').getView('MessageOverlayView');
-  const MessageBatch = require('./system/util/MessageBatch');
-  const batch = manager.batch('system:exit', MessageBatch);
-  batch.execute(message, 'Process: system:exit').then(function () {
-    require('electron').remote.app.quit();
-  });
+  const batch = manager.batch('system:exit');
+
+  batch.execute(message, 'Process: system:exit')
+    .then(function () {
+      require('electron').remote.app.quit();
+    });
 });
 
 manager.getManager('PageManager').getPage('SystemPage').mount('body');
-manager.getManager('StorageManager');
-
+/*
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
 
@@ -47,6 +47,7 @@ Mousetrap.bind(['esc'], function () {
     overlayview.getData().show = false;
   }
 });
+*/
 manager.setStatus(Manager.NORMAL);
 return;
 /*

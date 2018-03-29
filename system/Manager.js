@@ -81,10 +81,9 @@ module.exports = class Manager {
     }
   }
 
-  batch(event, Struckt = null, ...args) {
+  batch(event, ...args) {
     if (this._batches[event] === undefined) return null;
-    if (Struckt === null) Struckt = require('./util/Batch');
-    const batch = new Struckt(this);
+    const batch = new Batch(this);
 
     args.unshift(batch);
     this.callback(this._batches[event], ...args);

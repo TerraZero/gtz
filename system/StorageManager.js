@@ -60,9 +60,7 @@ module.exports = class StorageManager {
   onSystemExit(next, data, root, name, solid) {
     data.message.updateStatus('Save: ' + name + ' to "data/' + name + '.solid.json"');
     fs.writeFile(root + '/' + name + '.solid.json', JSON.stringify(solid), function () {
-      setTimeout(function () {
-        next(data);
-      }, 3000);
+      next(data);
     });
   }
 
