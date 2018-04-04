@@ -41,6 +41,7 @@ module.exports = class Manager {
 
   callback(definitions = [], ...args) {
     for (const definition of definitions) {
+      if (definition === null) continue;
       if (typeof definition === 'function') {
         definition.apply(null, args);
         continue;

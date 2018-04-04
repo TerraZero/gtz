@@ -10,5 +10,13 @@
       "type": "storage",
       "command": "repos"
     }
+  },
+  "CommandManager": {
+    "list": [
+      {
+        "command": "AddRepoCommand",
+        "name": "Add a repo to watch list"
+      }
+    ]
   }
 }

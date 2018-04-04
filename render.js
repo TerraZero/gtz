@@ -33,13 +33,12 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 manager.getManager('PageManager').getPage('SystemPage').mount('body');
-/*
+//*
 Mousetrap.bind(['command+p', 'ctrl+p'], function () {
-  const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
-
-  overlayview.getData().show = !overlayview.getData().show;
+  manager.getManager('CommandManager').choseCommand();
 });
 
+/*
 Mousetrap.bind(['esc'], function () {
   const overlayview = manager.getManager('ViewManager').getView('CommandOverlayView');
 
