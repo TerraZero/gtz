@@ -6,7 +6,7 @@ module.exports = class StorageManager {
 
   constructor(manager, config = {}) {
     this._manager = manager;
-    this._request = manager.getManager('RequestManager');
+    this._github = manager.getManager('GithubManager');
     this._config = config;
     this._data = {
       solid: {},
@@ -27,19 +27,22 @@ module.exports = class StorageManager {
     return this._config[name];
   }
 
-  get(name, callback) {
-    const info = this.getInfo(name);
+  get(name) {
+    const that = this;
+    const info = that.getInfo(name);
 
-    if (this._data[info.type][name]) {
-      this._manager.callback([callback], this._data[info.type][name]);
-    } else {
-      this._request.add(info.command, [this, this.update, { name, callback }]);
-    }
-  }
-
-  update(param, request, values) {
-    this.set(param.name, values);
-    this._manager.callback([param.callback], values);
+    return new Promise(function (resolve, reject) {
+      if (info === undefined) reject('The storage "' + name + '" is not defined.');
+      if (that._data[info.type][name]) {
+        resolve(that._data[info.type][name]);
+      } else {
+        that._github.repos()
+          .then(function (values) {
+            that.set(name, values);
+            resolve(values);
+          });
+      }
+    }).catch(log.error);
   }
 
   set(name, values) {

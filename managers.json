@@ -1,7 +1,4 @@
 {
-  "RequestManager": {
-    "limit": 5
-  },
   "StorageManager": {
     "watchRepos": {
       "type": "solid"

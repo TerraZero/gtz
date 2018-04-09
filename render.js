@@ -19,6 +19,14 @@ const manager = new Manager({
   managers: require('./managers.json'),
 });
 
+window.log.warn = function () {
+  console.warn(...arguments);
+};
+
+window.log.error = function () {
+  console.error(...arguments);
+};
+
 window.addEventListener('beforeunload', function (e) {
   if (manager.getStatus() !== Manager.EXIT) e.returnValue = false;
   manager.setStatus(Manager.EXIT);

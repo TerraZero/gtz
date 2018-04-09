@@ -31,7 +31,7 @@ module.exports = class RepositoryView extends View {
 
         classes() {
           return {
-            'list--content--show': this.show,
+            'list-items--content--show': this.show,
           };
         },
 
@@ -56,13 +56,13 @@ module.exports = class RepositoryView extends View {
 
         addRepo() {
           this.loading = true;
-          manager.getManager('StorageManager').get('repos', [this, this.addRepoCallback]);
+          manager.getManager('StorageManager').get('repos').then(this.addRepoCallback.bind(this));
         },
 
         addRepoCallback(repos) {
           const options = [];
 
-          for (const repo of repos) {
+          for (const repo of repos.data) {
             if (this.items.indexOf(repo.name) === -1) {
               options.push(repo.name);
             }

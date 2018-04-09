@@ -1,33 +1,20 @@
-.list-items--header
-  background: #3a3a3a
-  &:hover
-    background: #555555
+.list-items
 
-.list-items--content
-  background: #111111
-  overflow: hidden
-  transition: height .1s ease-in-out
-  max-height: 500px
-  .list-items--content--show &
-    overflow-y: scroll
+  &--header
+    background: #3a3a3a
+    &:hover
+      background: #555555
 
-.list-items--loader
-  background: #258fca
-  position: relative
-  height: 5px
-  &:before
-    position: absolute
-    content: ''
-    display: inline-block
-    width: 30px
-    height: 100%
-    background: #075c8c
-    top: 0
-    left: 0
-    animation: loader-pin 2s ease-in-out infinite
+  &--content
+    background: #111111
+    overflow: hidden
+    transition: height .1s ease-in-out
+    max-height: 500px
+    &--show &
+      overflow-y: scroll
 
-.list-items--item
-  padding: 2px 2px 2px 10px
-  &.active,
-  &:hover
-    background: #444444
+  &--item
+    padding: 2px 2px 2px 10px
+    &.active,
+    &:hover
+      background: #444444

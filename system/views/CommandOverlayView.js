@@ -15,6 +15,7 @@ module.exports = class CommandOverlayView extends View {
   get data() {
     return {
       show: false,
+      loading: false,
       status: {
         input: true,
         classes: {
@@ -150,6 +151,15 @@ module.exports = class CommandOverlayView extends View {
     data.status.callback = callback;
     data.status.classes.modal = true;
     data.show = true;
+  }
+
+  loading(load = null) {
+    const data = this.getData();
+
+    if (load !== null) {
+      data.loading = load;
+    }
+    return data.loading;
   }
 
 }

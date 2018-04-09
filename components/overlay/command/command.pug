@@ -2,7 +2,7 @@
   .command-overlay--content
     .command-overlay--header(v-if='status.input')
       input.command-overlay--input(type='text', v-model='input')
+    .command-overlay--loader.loader-infinity(v-if='loading')
     .command-overlay--options(v-bind:style='styles')
       .command-overlay--option.base-pointer(v-for='option in options', v-bind:class='option.classes', v-on:click='action(option)', v-if='option.show')
         | {{ option.name }}
-
