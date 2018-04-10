@@ -49,6 +49,14 @@ module.exports = class StorageManager {
     const info = this.getInfo(name);
 
     this._data[info.type][name] = values;
+    this._manager.trigger('storage.set.' + name, name, values, info);
+  }
+
+  add(name, value) {
+    const info = this.getInfo(name);
+
+    this._data[info.type][name].push(value);
+    this._manager.trigger('storage.add.' + name, name, value, this._data[info.type][name], info);
   }
 
   batchSystemExit(batch) {
