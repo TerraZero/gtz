@@ -17,11 +17,12 @@ module.exports = class CommandManager {
     for (const define of this._config.list) {
       options.push(define.name);
     }
-    this._ui.openSelect(options, [this, this.addCommand]);
+    this._ui.select(options)
+      .then(this.addCommand.bind(this));
   }
 
-  addCommand(options, option, index) {
-    const item = this._config.list[index];
+  addCommand(data) {
+    const item = this._config.list[data.index];
 
     this.runCommand(item.command);
   }
@@ -33,26 +34,35 @@ module.exports = class CommandManager {
     return this._commands[name];
   }
 
-  runCommand(name, callback = null, ...args) {
+  runCommand(name, ...args) {
     const Command = this.getCommand(name);
-    const command = new Command(this._manager, this, this._ui);
+    const command = new Command(this._manager, this._ui);
+    const item = {
+      command: command,
+      resolve: null,
+      reject: null,
+    };
+    const promise = new Promise(function (resolve, reject) {
+      item.resolve = resolve;
+      item.reject = reject;
+    });
 
-    command.init(...args);
-    this._pipe.push({ command, callback });
+    Promise.all([promise]).then(this.finish.bind(this));
+    this._pipe.push(item);
     this.tick();
   }
 
   tick() {
     if (!this._running && this._pipe.length > 0) {
+      const item = this._pipe[0];
+
       this._running = true;
-      this._pipe[0].command.execute();
+      item.command.init(item.resolve, item.reject);
     }
   }
 
-  update(...args) {
-    const command = this._pipe.shift();
-
-    this._manager.callback([command.callback], ...args);
+  finish() {
+    this._pipe.shift();
     this._running = false;
     this.tick();
   }

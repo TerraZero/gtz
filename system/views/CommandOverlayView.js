@@ -20,7 +20,9 @@ module.exports = class CommandOverlayView extends View {
         input: true,
         classes: {
           modal: false,
-        }
+        },
+        resolve: null,
+        reject: null,
       },
       input: '',
       item: {
@@ -111,7 +113,11 @@ module.exports = class CommandOverlayView extends View {
           }
           if (option !== null) {
             this.show = false;
-            manager.callback([this.status.callback], this.options, option, option.index);
+            this.status.resolve({
+              options: this.options,
+              option: option,
+              index: option.index,
+            });
           }
         },
 
@@ -120,14 +126,31 @@ module.exports = class CommandOverlayView extends View {
     };
   }
 
-  clearOptions() {
+  open() {
+    this.getData().show = true;
+    return this;
+  }
+
+  close() {
+    const data = this.getData();
+
+    data.show = false;
+    if (data.status.reject !== null) {
+      data.status.reject('The user dont chose a option.');
+    }
+    return this;
+  }
+
+  clear() {
     const data = this.getData();
 
     data.options = [];
     data.focus = -1;
+    data.status.resolve = null;
+    data.status.reject = null;
   }
 
-  addOption(name) {
+  option(name) {
     const data = this.getData();
 
     data.options.push({
@@ -140,17 +163,21 @@ module.exports = class CommandOverlayView extends View {
     });
   }
 
-  openSelect(options, callback) {
-    this.clearOptions();
+  select(options) {
+    const that = this;
     const data = this.getData();
 
+    this.clear();
     for (const option of options) {
-      this.addOption(option);
+      this.option(option);
     }
 
-    data.status.callback = callback;
     data.status.classes.modal = true;
-    data.show = true;
+    return new Promise(function (resolve, reject) {
+      data.status.resolve = resolve;
+      data.status.reject = reject;
+      that.open();
+    }).catch(log.error);
   }
 
   loading(load = null) {

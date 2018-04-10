@@ -67,12 +67,12 @@ module.exports = class RepositoryView extends View {
               options.push(repo.name);
             }
           }
-          manager.getManager('ViewManager').getView('CommandOverlayView').openSelect(options, [this, this.addRepoSelect]);
+          manager.getManager('ViewManager').getView('CommandOverlayView').select(options).then(this.addRepoSelect);
           this.loading = false;
         },
 
-        addRepoSelect(options, select, index) {
-          this.items.push(select.name);
+        addRepoSelect(data) {
+          this.items.push(data.option.name);
           manager.getManager('StorageManager').set('watchRepos', this.items);
         },
 

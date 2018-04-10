@@ -5,17 +5,12 @@ const Command = require('./Command');
 module.exports = class AddRepoCommand extends Command {
 
   execute() {
-    this.loading(true);
+    const that = this;
 
-    this.uiSelect(['hallo', 'cool'], this.selected);
-  }
-
-  selectRepo() {
-
-  }
-
-  selected(options, option, index) {
-    this.finish(option.name);
+    this._ui.select(['hallo', 'cool']).then(function (data) {
+      log(data);
+      that.finish(data);
+    });
   }
 
 }

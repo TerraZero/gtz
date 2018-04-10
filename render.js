@@ -1,8 +1,6 @@
 'use strict';
 
-window.log = function () {
-  console.log.apply(console, arguments);
-};
+window.log = require('./system/Logger');
 
 const remote = require('electron').remote;
 
@@ -18,14 +16,6 @@ const manager = new Manager({
   user: require('./user.json'),
   managers: require('./managers.json'),
 });
-
-window.log.warn = function () {
-  console.warn(...arguments);
-};
-
-window.log.error = function () {
-  console.error(...arguments);
-};
 
 window.addEventListener('beforeunload', function (e) {
   if (manager.getStatus() !== Manager.EXIT) e.returnValue = false;
