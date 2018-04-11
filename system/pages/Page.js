@@ -15,7 +15,7 @@ module.exports = class Page {
 
   get render() { return {}; }
 
-  mount(selector = '.system-root') {
+  mount(selector = '.page-system--root') {
     this._mount = $(selector).append(this._templates.template(this.template)(this.render));
     this.create();
   }
@@ -26,7 +26,7 @@ module.exports = class Page {
     this._views.getView(view).mount('#' + this.render.id + ' ' + mount);
   }
 
-  addPage(page, mount = '.system-root') {
+  addPage(page, mount = '.page-system--root') {
     this._pages.getPage(page).mount(mount);
   }
 

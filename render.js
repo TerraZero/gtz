@@ -8,6 +8,7 @@ remote.getCurrentWindow().setBounds(remote.screen.getPrimaryDisplay().bounds);
 
 const mousetrap = require('mousetrap');
 
+// init the manager
 const Manager = require('./system/Manager');
 const manager = new Manager({
   mode: 'render',
@@ -17,6 +18,7 @@ const manager = new Manager({
   managers: require('./managers.json'),
 });
 
+// add the exit event handler for batch process
 window.addEventListener('beforeunload', function (e) {
   if (manager.getStatus() !== Manager.EXIT) e.returnValue = false;
   manager.setStatus(Manager.EXIT);
@@ -45,6 +47,13 @@ Mousetrap.bind(['esc'], function () {
   }
 });
 */
+
+// set the GUI element for the logger status
+const status = manager.getManager('ViewManager').getView('StatusBarView');
+
+log.setLoading(status.loading.bind(status));
+
+// the system is ready - set the manager status to normal
 manager.setStatus(Manager.NORMAL);
 return;
 /*

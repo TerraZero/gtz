@@ -1,0 +1,6 @@
+.status-bar(id=id)
+  .status-bar--symbols
+  .status-bar--message(v-if='message')
+    .status-bar--text.base-ellipsis
+      | {{ message }}
+    .status-bar--loader.loader-infinity
