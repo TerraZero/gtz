@@ -77,7 +77,7 @@ module.exports = class Manager {
   trigger(event, ...args) {
     if (this._listeners[event] !== undefined) {
       for (const listener of this._listeners[event]) {
-        this.callback([listener.callback], args);
+        this.callback([listener.callback], ...args);
       }
     }
   }

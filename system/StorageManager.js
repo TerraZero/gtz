@@ -6,19 +6,13 @@ module.exports = class StorageManager {
 
   constructor(manager, config = {}) {
     this._manager = manager;
-    this._github = manager.getManager('GithubManager');
     this._config = config;
     this._data = {
       solid: {},
       storage: {},
     };
-    this._count = {
-      solid: 0,
-      storage: 0,
-    };
     for (const name in config) {
       this._data[config[name].type][name] = null;
-      this._count[config[name].type]++;
     }
     manager.addBatch('system:exit', [this, this.batchSystemExit]);
   }
@@ -28,21 +22,9 @@ module.exports = class StorageManager {
   }
 
   get(name) {
-    const that = this;
-    const info = that.getInfo(name);
+    const info = this.getInfo(name);
 
-    return new Promise(function (resolve, reject) {
-      if (info === undefined) reject('The storage "' + name + '" is not defined.');
-      if (that._data[info.type][name]) {
-        resolve(that._data[info.type][name]);
-      } else {
-        that._github.repos()
-          .then(function (values) {
-            that.set(name, values);
-            resolve(values);
-          });
-      }
-    }).catch(log.error);
+    return this._data[info.type][name];
   }
 
   set(name, values) {
@@ -50,6 +32,7 @@ module.exports = class StorageManager {
 
     this._data[info.type][name] = values;
     this._manager.trigger('storage.set.' + name, name, values, info);
+    this._manager.trigger('storage.change.' + name, values, info);
   }
 
   add(name, value) {
@@ -57,6 +40,7 @@ module.exports = class StorageManager {
 
     this._data[info.type][name].push(value);
     this._manager.trigger('storage.add.' + name, name, value, this._data[info.type][name], info);
+    this._manager.trigger('storage.change.' + name, this._data[info.type][name], info);
   }
 
   batchSystemExit(batch) {

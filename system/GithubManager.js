@@ -9,9 +9,14 @@ module.exports = class GithubManager {
   }
 
   repos() {
+    log.loading('Loading repository informations');
     return this._api
       .getUser()
       .listRepos()
+      .then(function (data) {
+        log.loading();
+        return data.data;
+      })
       .catch(log.error);
   }
 

@@ -4,8 +4,7 @@
       "type": "solid"
     },
     "repos": {
-      "type": "storage",
-      "command": "repos"
+      "type": "storage"
     }
   },
   "CommandManager": {

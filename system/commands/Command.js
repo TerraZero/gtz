@@ -4,8 +4,9 @@ module.exports = class Command {
 
   constructor(manager, ui) {
     this._manager = manager;
-    this._storage = this._manager.getManager('StorageManager');
     this._ui = ui;
+    this._api = manager.getManager('GithubManager');
+    this._storage = manager.getManager('StorageManager');
   }
 
   init(resolve, reject) {
@@ -20,27 +21,12 @@ module.exports = class Command {
     this._resolve(values);
   }
 
-  /**
-   * @param {string} name
-   * @return {Promise}
-   */
-  getStorage(name) {
-    this.loading(true);
-    return this._storage.get(name).then(this.loadend.bind(this));
+  get(storage) {
+    return this._storage.get(storage);
   }
 
-  /**
-   * @param {string} name
-   * @param {any} value
-   * @return {Promise}
-   */
-  addStorage(name, value) {
-    this.loading(true);
-    return this._storage.add(name, value).then(this.loadend.bind(this));
-  }
-
-  loading(load = true) {
-    this._ui.loading(load);
+  set(storage, values) {
+    return this._storage.set(storage, values);
   }
 
   /**
@@ -49,11 +35,6 @@ module.exports = class Command {
    */
   select(options) {
     return this._ui.select(options);
-  }
-
-  loadend(data) {
-    this.loading(false);
-    return data;
   }
 
 }

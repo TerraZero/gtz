@@ -19,12 +19,13 @@ module.exports = class RepositoryView extends View {
       item: {
         height: 22,
       },
-      loading: false,
       items: [],
     };
   }
 
   params(manager) {
+    manager.addListener('storage.change.watchRepos', null, [this, this.onWatchRepos]);
+
     return {
 
       computed: {
@@ -55,30 +56,16 @@ module.exports = class RepositoryView extends View {
         },
 
         addRepo() {
-          this.loading = true;
-          manager.getManager('StorageManager').get('repos').then(this.addRepoCallback.bind(this));
-        },
-
-        addRepoCallback(repos) {
-          const options = [];
-
-          for (const repo of repos.data) {
-            if (this.items.indexOf(repo.name) === -1) {
-              options.push(repo.name);
-            }
-          }
-          manager.getManager('ViewManager').getView('CommandOverlayView').select(options).then(this.addRepoSelect);
-          this.loading = false;
-        },
-
-        addRepoSelect(data) {
-          this.items.push(data.option.name);
-          manager.getManager('StorageManager').set('watchRepos', this.items);
+          manager.getManager('CommandManager').runCommand('AddRepoCommand');
         },
 
       },
 
     }
+  }
+
+  onWatchRepos(values, info) {
+    this.getData().items = values;
   }
 
 }
