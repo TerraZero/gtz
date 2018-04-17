@@ -12,6 +12,10 @@
       {
         "command": "AddRepoCommand",
         "name": "Add a repo to watch list"
+      },
+      {
+        "command": "OpenSettingsCommand",
+        "name": "Edit settings"
       }
     ]
   }

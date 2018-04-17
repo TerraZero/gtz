@@ -17,6 +17,7 @@ module.exports = class EditorPage extends Page {
 
     this.addView('CommandOverlayView', '.page-system--tools');
     this.addView('MessageOverlayView', '.page-system--tools');
+    this.addView('SettingsOverlayView', '.page-system--tools');
 
     this.addView('StatusBarView', '.page-system--status');
   }

@@ -1,0 +1,24 @@
+{
+  "user": {
+    "title": "User",
+    "items": [
+      {
+        "title": "Name",
+        "value": "test"
+      },
+      {
+        "title": "Password",
+        "value": "cool"
+      }
+    ]
+  },
+  "git": {
+    "title": "Git",
+    "items": [
+      {
+        "title": "Url",
+        "value": ""
+      }
+    ]
+  }
+}

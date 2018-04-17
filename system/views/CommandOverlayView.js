@@ -128,6 +128,7 @@ module.exports = class CommandOverlayView extends View {
 
   open() {
     this.getData().show = true;
+    this._vue.$nextTick(() => this._vue.$refs.input.focus());
     return this;
   }
 

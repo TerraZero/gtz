@@ -55,6 +55,7 @@ log.setLoading(status.loading.bind(status));
 
 // the system is ready - set the manager status to normal
 manager.setStatus(Manager.NORMAL);
+manager.getManager('SettingsManager');
 return;
 /*
 const user = require('./user.json');

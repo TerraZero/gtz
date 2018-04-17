@@ -1,0 +1,12 @@
+.settings-overlay.base-tools(id=id, v-if='show')
+  .settings-overlay--content
+    .settings-overlay--tabs
+      .settings-overlay--tab.base-pointer(v-for='(tab, key) in tabs', v-bind:class='tabClass(key)', v-on:click='tabClick(key)')
+        | {{ tab.title }}
+    .settings-overlay--form
+      .settings-overlay--item(v-for='(item, key) in items')
+        label.settings-overlay--label {{ item.title }}
+        input.settings-overlay--input(type='text', v-model='item.value')
+    .settings-overlay--actions
+      .settings-overlay--action.base-pointer(v-for='(action, key) in actions', v-on:click='actionClick(key)')
+        | {{ action.title }}
