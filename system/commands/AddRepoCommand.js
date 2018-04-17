@@ -5,17 +5,17 @@ const Command = require('./Command');
 module.exports = class AddRepoCommand extends Command {
 
   execute() {
-    const repos = this.get('repos');
+    return this.getRepo()
+      .then(this.selectRepo.bind(this))
+      .then(this.addRepoWatch.bind(this));
+  }
 
-    if (repos === null) {
-      this._api.repos().then(this.selectRepo.bind(this));
-    } else {
-      this.selectRepo(repos);
-    }
+  getRepo() {
+    return this.get('repos') || this._api.repos();
   }
 
   selectRepo(repos) {
-    const watchRepos = this.get('watchRepos') || [];
+    const watchRepos = this.get('watchRepos', false) || [];
     const options = [];
 
     this.set('repos', repos);
@@ -25,16 +25,15 @@ module.exports = class AddRepoCommand extends Command {
         options.push(repo.name);
       }
     }
-    this.select(options).then(this.addRepoWatch.bind(this));
-    return repos;
+    return this.select(options);
   }
 
   addRepoWatch(data) {
-    const watchRepos = this.get('watchRepos') || [];
+    const watchRepos = this.get('watchRepos', false) || [];
 
     watchRepos.push(data.option.name);
     this.set('watchRepos', watchRepos);
-    this.finish(watchRepos);
+    return watchRepos;
   }
 
 }

@@ -12,7 +12,8 @@ module.exports = class Command {
   init(resolve, reject) {
     this._resolve = resolve;
     this._reject = reject;
-    this.execute();
+    this.execute()
+      .then(this.finish.bind(this));
   }
 
   execute() { }
@@ -21,8 +22,15 @@ module.exports = class Command {
     this._resolve(values);
   }
 
-  get(storage) {
-    return this._storage.get(storage);
+  get(storage, promise = true) {
+    const value = this._storage.get(storage);
+
+    if (value === null) return null;
+    if (promise) {
+      return Promise.resolve(value);
+    } else {
+      return value;
+    }
   }
 
   set(storage, values) {
