@@ -1,0 +1,24 @@
+mixin div(...names)
+  -
+    attributes.class = attributes.class || '';
+
+    for (var index in names) {
+      names[index] = tag + '--' + names[index];
+    }
+    if (attributes.class) {
+      attributes.class += ' ' + names.join(' ');
+    } else {
+      attributes.class = names.join(' ');
+    }
+
+  div&attributes(attributes)
+    block
+
+block vars
+  - var tag = 'element'
+
++div('root')
+  +div('items')
+    block item
+      +div('item').cool
+        | cool
