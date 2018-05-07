@@ -8,3 +8,7 @@ block header
       | {{ count }}
     .list-items--header-add(v-on:click.stop='addRepo()')
       | +
+
+block items
+  .list-items--item.base-pointer(v-for='item in items')
+    | {{ item }}
